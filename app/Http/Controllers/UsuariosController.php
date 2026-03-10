@@ -19,9 +19,9 @@ class UsuariosController extends Controller
      */
     public function index()
     {
-        $this->usuariosService->getAll();
+        $usuarios = $this->usuariosService->getAll();
         
-        return view('usuarios.index');
+        return view('usuarios.index', compact('usuarios'));
     }
 
     /**
