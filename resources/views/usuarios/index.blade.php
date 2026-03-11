@@ -1,4 +1,7 @@
 <x-layout>
+    <div class="d-flex justify-content-end mt-3">
+        {{ $usuarios->links() }}
+    </div>
     <table class="table table-striped">
         <thead>
             <tr>
@@ -15,12 +18,4 @@
             @endforeach
         </tbody>
     </table>
-    <div class="d-flex justify-content-between align-items-center mt-3">
-        <div>
-            Showing {{ $usuarios->firstItem() }} to {{ $usuarios->lastItem() }} of {{ $usuarios->total() }} results
-        </div>
-
-        {{ $usuarios->links() }}
-    </div>
-    
 </x-layout>
