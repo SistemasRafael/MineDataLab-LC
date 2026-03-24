@@ -1,4 +1,4 @@
-<x-layout>
+<x-layout :userName="session('usuario.nombre')">
     <div class="d-flex justify-content-end mt-3">
         {{ $usuarios->links() }}
     </div>
