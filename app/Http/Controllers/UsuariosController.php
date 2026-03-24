@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests\Usuarios\CreateUsuariosRequest;
 use App\Services\Usuarios\UsuariosService;
-use Illuminate\Support\Facades\Redirect;
 
 class UsuariosController extends Controller
 {
