@@ -12,7 +12,7 @@ use App\Enums\UnidadMinas;
 class Layout extends Component
 {
     public string $userName;
-    public string $minaSeleccionada = 'Cambiar de mina';
+    public ?string $minaSeleccionada = null;
     public array $minas;
     
     public function __construct(
@@ -42,6 +42,11 @@ class Layout extends Component
                         ->getBy($unidad_acc)
                         ->pluck('nombre', 'unidad_id')
                         ->toArray();
+        }
+
+        if (session()->has('mine_selected') && 
+            session('mine_selected') !== null) {
+            $this->minaSeleccionada = session('mine_selected')['nombre'];
         }
     }
 
