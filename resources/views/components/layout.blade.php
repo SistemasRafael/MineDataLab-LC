@@ -3,39 +3,90 @@
 <head>
     <meta charset="UTF-8">
     <title>{{ config('app.name', 'Laravel') }}</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
- <body class="bg-light">
-    <nav class="navbar navbar-expand-lg fixed-top navbar-light bg-light" aria-label="Main navigation">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">
-                <img src="/assets/minedata_lab.jpg" width="30" height="30" class="d-inline-block align-top" alt="">
-                MinaData Labs
-            </a>
-            <div class="navbar-collapse offcanvas-collapse" id="navbarsExampleDefault">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-bs-toggle="dropdown" aria-expanded="false">{{ $userName }}</a>
-                        <ul class="dropdown-menu" aria-labelledby="dropdown01">
-                            <li><a class="dropdown-item" href="{{ route('auth.logout') }}">Cerrar sesión</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-bs-toggle="dropdown" aria-expanded="false">{{ $minaSeleccionada }}</a>
-                        <ul class="dropdown-menu" aria-labelledby="dropdown01">
-                            @foreach($minas as $id => $nombre)
-                                <li><a class="dropdown-item" data-mina-id="{{ $id }}" href="#">{{ $nombre }}</a></li>
-                            @endforeach
-                        </ul>
-                    </li>
-                </ul>
+ <body>
+    
+<body class="min-h-screen flex flex-col bg-gray-100 text-gray-800">
+    <header class="bg-indigo-600 text-white">
+        <nav class="bg-neutral-primary border-default">
+            <div class="flex flex-wrap items-center justify-between max-w-screen-xl mx-auto p-4">
+                <a href="https://flowbite.com" class="flex items-center space-x-3 rtl:space-x-reverse">
+                    <img src="/assets/minedata_lab.jpg" class="h-7" alt="Flowbite Logo" />
+                    <span class="self-center text-xl font-semibold whitespace-nowrap text-heading">MineData Labs</span>
+                </a>
+                <div class="flex items-center md:order-2 space-x-1 md:space-x-2 rtl:space-x-reverse">
+                    <ul class="flex flex-col mt-4 font-medium md:flex-row md:mt-0 md:space-x-8 rtl:space-x-reverse">
+                        <li>
+                            <button 
+                                id="mega-menu-dropdown-button-user" 
+                                data-dropdown-toggle="mega-menu-dropdown-user" 
+                                class="flex items-center justify-between w-full py-2 px-3 font-medium text-heading border-b border-light md:w-auto hover:bg-neutral-secondary-soft md:hover:bg-transparent md:border-0 md:hover:text-fg-brand md:p-0">
+                                {{ $userName }} 
+                                <svg class="w-4 h-4 ms-1.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 9-7 7-7-7"/></svg>
+                            </button>
+                            <div 
+                                id="mega-menu-dropdown-user" 
+                                class="absolute z-10 grid hidden w-auto grid-cols-2 text-sm bg-neutral-primary-soft border border-default rounded-base shadow md:grid-cols-3">
+                                <div class="p-4 pb-0 text-heading md:pb-4">
+                                    <ul class="space-y-3" aria-labelledby="mega-menu-dropdown-button">
+                                        <li>
+                                            <li><a class="text-body hover:text-fg-brand" href="{{ route('auth.logout') }}">Cerrar sesión</a></li>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div id="mega-menu" class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1">
+                    <ul class="flex flex-col mt-4 font-medium md:flex-row md:mt-0 md:space-x-8 rtl:space-x-reverse">
+                        <li x-data="argEmprUnidades({
+                            minaSeleccionada: @js($minaSeleccionada),
+                            minas: @js($minas)
+                        })">
+                            <button 
+                                id="mega-menu-dropdown-button" 
+                                data-dropdown-toggle="mega-menu-dropdown" 
+                                class="flex items-center justify-between w-full py-2 px-3 font-medium text-heading border-b border-light md:w-auto hover:bg-neutral-secondary-soft md:hover:bg-transparent md:border-0 md:hover:text-fg-brand md:p-0">
+                                <div x-text="minaSeleccionada ?? 'Cambiar de mina'">Company</div>
+                                <svg class="w-4 h-4 ms-1.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 9-7 7-7-7"/></svg>
+                            </button>
+                            <div id="mega-menu-dropdown" class="absolute z-10 grid hidden w-auto grid-cols-2 text-sm bg-neutral-primary-soft border border-default rounded-base shadow md:grid-cols-3">
+                                <div class="p-4 pb-0 text-heading md:pb-4">
+                                    <ul class="space-y-3" aria-labelledby="mega-menu-dropdown-button">
+                                        <template x-for="(nombre, id) in minas" :key="id">
+                                            <li>
+                                                <a href="#"
+                                                    class="text-body hover:text-fg-brand"
+                                                    @click.prevent="cambiarMina(id, nombre)"
+                                                    x-text="nombre">
+                                                </a>
+                                            </li>
+                                        </template>
+                                    </ul>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
             </div>
-        </div>
-    </nav>
-    <main class="container">
+        </nav>
+    </header>
+    <main class="flex-1 max-w-7xl mx-auto w-full px-4 py-6">
         {{ $slot }}
     </main>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO" crossorigin="anonymous"></script>
-    <script src="{{ asset('js/layout.js') }}"></script>
+    <footer class="bg-gray-800 text-gray-300">
+        <div class="max-w-7xl mx-auto px-4 py-4 text-center text-sm">
+            © 2026 Mi Aplicación. Todos los derechos reservados.
+        </div>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@4.0.1/dist/flowbite.min.js"></script>
+    <script>
+        window.routes = {
+            cambiarMina: "{{ route('mina.cambiar') }}"
+        };
+    </script>
 </body>
 </html>
