@@ -12,7 +12,7 @@ class UsuariosService {
     public function getAll() : LengthAwarePaginator 
     {
         return Usuarios::latest('id')
-                        ->paginate(Usuarios::PAGINATE);
+                ->paginate(Usuarios::PAGINATE);
     }
 
     public function create(array $usuario) : Usuarios 
@@ -55,5 +55,33 @@ class UsuariosService {
                         ->first();
         
         return $data ? ArgUsuariosDTO::fromModel($data) : null;
+    }
+
+    public function getAllUsersDetalles() : LengthAwarePaginator
+    {
+        $paginator = Usuarios::from('arg_usuarios as us')
+                ->leftJoin('arg_usuarios as uc', 'us.u_id_created', '=', 'uc.u_id')
+                ->select([
+                     'us.u_id'
+                    ,'us.codigo'
+                    ,'us.nombre'
+                    ,'us.email'
+                    ,'us.fecha_creacion'
+                    ,'us.fecha_fin'
+                    ,DB::raw('uc.nombre AS user_created')
+                    ,'us.activo'
+                    ,DB::raw("
+                        CASE 
+                            WHEN us.division = 'empleado' THEN 'AD' 
+                            ELSE 'User Local' 
+                        END AS tipo_usuario
+                    ")
+                ])
+                ->orderBy('us.nombre', 'asc')
+                ->paginate(Usuarios::PAGINATE);
+        
+        $paginator->getCollection()->transform(fn ($row) => ArgUsuariosDTO::fromModel($row));
+
+        return $paginator;
     }
 }

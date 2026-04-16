@@ -1,18 +1,23 @@
 let pendingRequests = 0;
 
 const showLoading = () => {
-    Swal.fire({
-        title: 'Cargando...',
-        allowOutsideClick: false,
-        allowEscapeKey: false,
-        didOpen: () => {
-            Swal.showLoading();
-        }
-    });
+    const loader = document.getElementById('global-loading');
+    
+    if (!loader){
+        return;
+    } 
+
+    loader.classList.remove('hidden');
 };
 
 const hideLoading = () => {
-    Swal.close();
+    const loader = document.getElementById('global-loading');
+
+    if (!loader) {
+        return;
+    } 
+
+    loader.classList.add('hidden');
 };
 
 window.fetchWithLoading = async (url, options = {}) => {

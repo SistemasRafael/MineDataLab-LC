@@ -2,7 +2,7 @@ export default function argEmprUnidades(config) {
     return {
         ...config,
         
-        cambiarMina(id, nombre) {
+        cambiarMina(mina) {
             fetchWithLoading(routes.cambiarMina, {
                 method: 'POST',
                 headers: {
@@ -12,14 +12,14 @@ export default function argEmprUnidades(config) {
                         .getAttribute('content')
                 },
                 body: JSON.stringify({ 
-                    id : id, 
-                    nombre: nombre 
+                    id : mina.id, 
+                    nombre: mina.nombre 
                 })
             })
             .then(res => res.json())
             .then(data => {
                 if (data.success) {
-                    this.minaSeleccionada = nombre;
+                    this.minaSeleccionada = mina;
                 }
                 else {
                     Swal.fire({
