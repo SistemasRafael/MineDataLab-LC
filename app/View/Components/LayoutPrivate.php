@@ -9,10 +9,10 @@ use App\Services\SessionService;
 use App\Services\ArgEmprUnidadesService;
 use App\Enums\UnidadMinas;
 
-class Layout extends Component
+class LayoutPrivate extends Component
 {
     public string $userName;
-    public ?string $minaSeleccionada = null;
+    public array $minaSeleccionada = [];
     public array $minas;
     
     public function __construct(
@@ -46,7 +46,7 @@ class Layout extends Component
 
         if (session()->has('mine_selected') && 
             session('mine_selected') !== null) {
-            $this->minaSeleccionada = session('mine_selected')['nombre'];
+            $this->minaSeleccionada = session('mine_selected');
         }
     }
 
@@ -56,6 +56,6 @@ class Layout extends Component
     public function render(): View|Closure|string
     {
 
-        return view('components.layout');
+        return view('components.layout-private');
     }
 }

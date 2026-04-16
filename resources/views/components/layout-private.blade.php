@@ -13,7 +13,7 @@
         <nav class="bg-neutral-primary border-default">
             <div class="flex flex-wrap items-center justify-between max-w-screen-xl mx-auto p-4">
                 <a href="https://flowbite.com" class="flex items-center space-x-3 rtl:space-x-reverse">
-                    <img src="/assets/minedata_lab.jpg" class="h-7" alt="Flowbite Logo" />
+                    <img src="{{ asset('assets/minedata_lab.jpg') }}" class="h-7" alt="Flowbite Logo" />
                     <span class="self-center text-xl font-semibold whitespace-nowrap text-heading">MineData Labs</span>
                 </a>
                 <div class="flex items-center md:order-2 space-x-1 md:space-x-2 rtl:space-x-reverse">
@@ -42,33 +42,10 @@
                 </div>
                 <div id="mega-menu" class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1">
                     <ul class="flex flex-col mt-4 font-medium md:flex-row md:mt-0 md:space-x-8 rtl:space-x-reverse">
-                        <li x-data="argEmprUnidades({
-                            minaSeleccionada: @js($minaSeleccionada),
-                            minas: @js($minas)
-                        })">
-                            <button 
-                                id="mega-menu-dropdown-button" 
-                                data-dropdown-toggle="mega-menu-dropdown" 
-                                class="flex items-center justify-between w-full py-2 px-3 font-medium text-heading border-b border-light md:w-auto hover:bg-neutral-secondary-soft md:hover:bg-transparent md:border-0 md:hover:text-fg-brand md:p-0">
-                                <div x-text="minaSeleccionada ?? 'Cambiar de mina'">Company</div>
-                                <svg class="w-4 h-4 ms-1.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 9-7 7-7-7"/></svg>
-                            </button>
-                            <div id="mega-menu-dropdown" class="absolute z-10 grid hidden w-auto grid-cols-2 text-sm bg-neutral-primary-soft border border-default rounded-base shadow md:grid-cols-3">
-                                <div class="p-4 pb-0 text-heading md:pb-4">
-                                    <ul class="space-y-3" aria-labelledby="mega-menu-dropdown-button">
-                                        <template x-for="(nombre, id) in minas" :key="id">
-                                            <li>
-                                                <a href="#"
-                                                    class="text-body hover:text-fg-brand"
-                                                    @click.prevent="cambiarMina(id, nombre)"
-                                                    x-text="nombre">
-                                                </a>
-                                            </li>
-                                        </template>
-                                    </ul>
-                                </div>
-                            </div>
-                        </li>
+                        <x-CambiarMina 
+                            :minaSeleccionada="$minaSeleccionada" 
+                            :minas="$minas">
+                        </x-CambiarMina>
                     </ul>
                 </div>
             </div>
@@ -82,6 +59,7 @@
             © 2026 Mi Aplicación. Todos los derechos reservados.
         </div>
     </footer>
+    <x-loading text="Procesando…"></x-loading>
     <script src="https://cdn.jsdelivr.net/npm/flowbite@4.0.1/dist/flowbite.min.js"></script>
     <script>
         window.routes = {

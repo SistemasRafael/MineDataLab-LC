@@ -22,8 +22,23 @@ class SignInAuthRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'codigo' => 'required|string|max:200',
+            'codigo' => 'required|string|max:200|exists:arg_usuarios,codigo',
             'clave' => 'required|string|max:200',
         ];
     }
+
+    
+    public function messages()
+    {
+        return [
+            'codigo.required' => 'El código es obligatorio.',
+            'codigo.string' => 'El código debe tener un formato válido.',
+            'codigo.max' => 'El código debe tener un maximo de 200 caracteres.',
+            'codigo.exists' => 'El código no existe en nuestros registros.',
+            'clave.required' => 'La clave es obligatoria.',
+            'clave.string' => 'La clave debe tener un formato válido.',
+            'clave.max' => 'La clave debe tener un maximo de 200 caracteres.',
+        ];
+    }
+
 }

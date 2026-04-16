@@ -6,6 +6,7 @@ use App\Http\Requests\Auth\SignInAuthRequest;
 use App\Services\Usuarios\UsuariosService;
 use App\DTO\AuthDTO;
 use App\Services\SessionService;
+use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
@@ -18,7 +19,7 @@ class AuthController extends Controller
 
     public function index()
     {
-        return view('auth.index');
+        return view('auth.signIn');
     }
 
     public function signIn(SignInAuthRequest $request)
@@ -28,9 +29,9 @@ class AuthController extends Controller
         $user = $this->usuariosService->getUserBy($authDTO->codigo, $authDTO->clave);
 
         if (!$user) {
-            return Redirect()
-                   ->back()
-                   ->with('message-error', 'codigo o clave incorrectos');
+            throw ValidationException::withMessages([
+                'CodioClaveIncorrectos' => 'Código o clave incorrectos.',
+            ]);
         }
         
         $this->sessionService->createUserSession($user);
@@ -41,8 +42,7 @@ class AuthController extends Controller
         }
 
         return Redirect()
-               ->route('usuarios.index')
-               ->with('message-success', 'Usuario logiado exitosamente!');
+               ->route('usuarios.index');
     }
 
     public function logOut()

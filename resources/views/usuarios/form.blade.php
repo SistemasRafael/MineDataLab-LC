@@ -1,4 +1,4 @@
-<x-layout>
+<x-layout-private>
     <div class="row justify-content-center">
         <div class="col-md-4">
             <form method="POST" action="{{ $post->exists ? route('posts.update', $post) : route('posts.store') }}">
@@ -32,4 +32,4 @@
             </form>
         </div>
     </div>
-</x-layout>
+</x-layout-private>

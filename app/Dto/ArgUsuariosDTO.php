@@ -2,45 +2,39 @@
 
 namespace App\DTO;
 
-use App\Http\Requests\Auth\SignInAuthRequest;
+use Carbon\Carbon;
+use App\helpers\Helpers;
 
 class ArgUsuariosDTO
 {
-    public int $u_id;
-    public int $unidad_def;
-    public int $unidad_acc;
-    public string $codigo;
-    public string $nombre;
-    public string $email;
-    public string $unidades;
+    public function __construct(
+            public int $u_id,
+            public string $codigo,
+            public string $nombre,
+            public string $email,
+            public ?Carbon $fecha_creacion,
+            public ?Carbon $fecha_fin,
+            public ?string $user_created,
+            public ?string $activo,
+            public ?string $tipo_usuario,
+            public ?int $unidad_def,
+            public ?int $unidad_acc
+        ) {}
 
-    public function __construct(int $u_id, 
-                                string $codigo, 
-                                string $nombre, 
-                                string $email, 
-                                string $unidades, 
-                                int $unidad_def, 
-                                int $unidad_acc)
-    {
-        $this->u_id = $u_id;
-        $this->codigo = $codigo;
-        $this->nombre = $nombre;
-        $this->email = $email;
-        $this->unidades = $unidades;
-        $this->unidad_def = $unidad_def;
-        $this->unidad_acc = $unidad_acc;
-    }
-
-    public static function fromModel($data): self
+    public static function fromModel(object $row): self
     {
         return new self(
-            $data->u_id,
-            $data->codigo,
-            $data->nombre,
-            $data->email,
-            $data->unidades,
-            $data->unidad_def,
-            $data->unidad_acc
+            $row->u_id,
+            $row->codigo,
+            $row->nombre,
+            $row->email,
+            helpers::parseDate($row->fecha_creacion),
+            helpers::parseDate($row->fecha_fin),
+            $row->user_created,
+            $row->activo,
+            $row->tipo_usuario,
+            $row->unidad_def,
+            $row->unidad_acc
         );
     }
 }
