@@ -36,8 +36,7 @@ class LayoutPrivate extends Component
         //                 ->pluck('unidad_id', 'nombre')
         //                 ->toArray();
         // }
-        else if ($unidad_acc <> UnidadMinas::TODAS->value && 
-                $unidad_acc <> UnidadMinas::VARIAS_MINA->value) {
+        else if ($unidad_acc <> UnidadMinas::TODAS->value && $unidad_acc <> UnidadMinas::VARIAS_MINA->value) {
             $this->minas = $this->argEmprUnidadesService
                         ->getBy($unidad_acc)
                         ->pluck('nombre', 'unidad_id')

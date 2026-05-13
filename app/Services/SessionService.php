@@ -2,9 +2,12 @@
 
 namespace App\Services;
 
+use App\DTO\ArgUsuariosDTO;
+use App\Models\arg_usuarios as Usuarios;
+
 class SessionService
 {
-    public function createUserSession($user): void
+    public function createUserSession(?Usuarios $user): void
     {
         session([
             'usuario' => [
@@ -16,13 +19,13 @@ class SessionService
         ]);
     }
 
-    public function createUserDirectivesSession($directivas): void
+    public function createUserDirectivesSession(?ArgUsuariosDTO $directivas): void
     {
         session([
             'usuario_directivas' => [
-                'unidad_def' => $directivas->unidad_def ?? null,
-                'unidad_acc' => $directivas->unidad_acc ?? null,
-                'unidades'    => $directivas->unidades ?? null
+                'unidad_def' => $directivas->unidad_def ?? 0,
+                'unidad_acc' => $directivas->unidad_acc ?? 0,
+                'unidades'    => $directivas->unidades ?? 0
             ]
         ]);
     }

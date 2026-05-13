@@ -4,7 +4,6 @@ namespace App\Helpers;
 
 use Carbon\Carbon;
 use DateTimeInterface;
-use Exception;
 
 
 class Helpers
@@ -24,6 +23,18 @@ class Helpers
         }
         
         $value = trim((string) $value);
+        
+        if (preg_match('/^\d{2}\/\d{2}\/\d{2}$/', $value)) {
+            [$day, $month, $year] = explode('/', $value);
+
+            $year = (int) $year;
+
+            $year = $year <= 50 
+                ? 2000 + $year   // 00–50 → 2000–2050
+                : 1900 + $year;  // 51–99 → 1951–1999
+
+            return Carbon::createFromDate($year, (int)$month, (int)$day);
+        }
 
         $formats = [
             'd/m/Y',
@@ -35,7 +46,11 @@ class Helpers
         foreach ($formats as $format) {
             try 
             {
-                return Carbon::createFromFormat($format, $value);
+                $date = Carbon::createFromFormat($format, $value);
+                
+                if ($date && $date->format($format) === $value) {
+                    return $date;
+                }
             } 
             catch (\Exception $e) {
             }

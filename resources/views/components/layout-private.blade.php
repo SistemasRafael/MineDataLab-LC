@@ -51,7 +51,7 @@
             </div>
         </nav>
     </header>
-    <main class="flex-1 max-w-7xl mx-auto w-full px-4 py-6">
+    <main class="flex-1 mx-auto w-full px-4 py-6">
         {{ $slot }}
     </main>
     <footer class="bg-gray-800 text-gray-300">
