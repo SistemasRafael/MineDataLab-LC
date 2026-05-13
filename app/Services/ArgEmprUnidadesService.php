@@ -12,7 +12,7 @@ class ArgEmprUnidadesService {
         return arg_empr_unidades::all();
     }
 
-    public function getBy(int $unidad_id) : Collection
+    public function getBy(int $unidad_id) : ?arg_empr_unidades
     {
         return arg_empr_unidades::where('unidad_id', $unidad_id)
                                 ->first();

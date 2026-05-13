@@ -27,6 +27,12 @@ class UsuariosService {
                         ->first();
     }
 
+    public function getUserByCodigo(string $codigo): ?Usuarios
+    { 
+        return Usuarios::where('codigo', $codigo)
+                        ->first();
+    }
+
     public function getUserDirectivesBy(string $codigo): ?ArgUsuariosDTO
     { 
         $data = Usuarios::from('arg_usuarios as u')
@@ -57,9 +63,9 @@ class UsuariosService {
         return $data ? ArgUsuariosDTO::fromModel($data) : null;
     }
 
-    public function getAllUsersDetalles() : LengthAwarePaginator
+    public function getAllUsersDetalles(?string $search = null, array $filtersArray = []) : LengthAwarePaginator
     {
-        $paginator = Usuarios::from('arg_usuarios as us')
+        $query = Usuarios::from('arg_usuarios as us')
                 ->leftJoin('arg_usuarios as uc', 'us.u_id_created', '=', 'uc.u_id')
                 ->select([
                      'us.u_id'
@@ -76,12 +82,34 @@ class UsuariosService {
                             ELSE 'User Local' 
                         END AS tipo_usuario
                     ")
-                ])
-                ->orderBy('us.nombre', 'asc')
-                ->paginate(Usuarios::PAGINATE);
-        
-        $paginator->getCollection()->transform(fn ($row) => ArgUsuariosDTO::fromModel($row));
+                ]);
 
-        return $paginator;
+        // if (filled($search)) {
+        //     BCFilterEngine::apply($query, 'us.fecha_creacion', $search);
+        //     $paginator = $query->get();
+        // }
+
+        if (filled($search)) {
+            if (filled($filtersArray)) {
+                // $query->where(function ($q) use ($search, $filtersArray) {
+                //     $q->where('us.nombre', 'like', "%{$search}%")
+                //     ->orWhere('us.codigo', 'like', "%{$search}%")
+                //     ->orWhere('us.email', 'like', "%{$search}%");
+                // })
+                // ->whereIn('us.division', $filtersArray);
+            }
+            else {
+                $query->where(function ($q) use ($search) {
+                    $q->where('us.nombre', 'like', "%{$search}%")
+                    ->orWhere('us.codigo', 'like', "%{$search}%")
+                    ->orWhere('us.email', 'like', "%{$search}%");
+                });
+            }
+        }
+
+        $paginator = $query->orderBy('us.nombre', 'asc')
+                            ->paginate(Usuarios::PAGINATE);
+        
+        return $paginator->setCollection($paginator->getCollection()->map(fn ($row) => ArgUsuariosDTO::fromModel($row)));
     }
 }

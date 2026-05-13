@@ -8,7 +8,6 @@ use App\Services\Usuarios\UsuariosService;
 
 class UsuariosController extends Controller
 {
-
     public function __construct(protected UsuariosService $usuariosService)
     {
     }
@@ -16,11 +15,49 @@ class UsuariosController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $usuarios = $this->usuariosService->getAllUsersDetalles();
         
-        return view('usuarios.index', compact('usuarios'));
+
+        $search = $request->input('search');
+        $filters = request('filters');
+        $filtersArray = $filters ? explode(',', $filters) : [];
+
+        
+$filtros = [
+            [
+                'label' => 'Usuario',
+                'Type' => 'string',
+            ],
+            [
+                'label' => 'Nombre',
+                'Type' => 'string',
+            ],
+            [
+                'label' => 'Correo',
+                'Type' => 'string',
+            ],
+            [
+                'label' => 'Tipo',
+                'Type' => 'string',
+            ],
+            [
+                'label' => 'Estatus',
+                'Type' => 'string',
+            ],
+            [
+                'label' => 'Creador',
+                'Type' => 'string',
+            ],
+            [
+                'label' => 'Creacion',
+                'Type' => 'date',
+            ],
+        ];
+
+        $usuarios = $this->usuariosService->getAllUsersDetalles($search, $filtersArray);
+
+        return view('usuarios.index', compact('usuarios', 'filtros'));
     }
 
     /**
